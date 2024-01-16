@@ -1,5 +1,5 @@
 /**
- * Leetcode 115. Three Sum
+ * Leetcode 15. Three Sum
  * Returns an array of arrays, each containing three elements from the input array that sum to zero.
  *
  * @param {number[]} nums - The input array of numbers.
@@ -9,40 +9,54 @@ const threeSum = (nums) => {
   // Sort the input array in ascending order
   nums.sort((a, b) => a - b)
 
-  let left = 0
-  let right = nums.length - 1
-  let result = []
+  // Initialize an empty array to store the result
+  const result = []
+  const n = nums.length
 
-  while (left < right) {
-    // Calculate the sum of the leftmost, the second leftmost, and the rightmost elements
-    const sum = nums[left] + nums[left + 1] + nums[right]
+  // Iterate through the array
+  for (let i = 0; i < n - 2; i++) {
+    // Skip duplicates
+    if (i > 0 && nums[i] === nums[i - 1]) {
+      continue
+    }
 
-    if (sum === 0) {
-      // If the sum is zero, add the triplet to the result array
-      result.push([nums[left], nums[left + 1], nums[right]])
+    // Initialize two pointers, left and right
+    let left = i + 1
+    let right = n - 1
 
-      // Store the current values of left and right
-      let lastLeftOccurrence = nums[left]
-      let lastRightOccurrence = nums[right]
+    // Move the pointers towards each other
+    while (left < right) {
+      // Calculate the sum of the current triplet
+      const sum = nums[i] + nums[left] + nums[right]
 
-      // Move the left pointer to the next distinct element
-      while (left < right && nums[left] === lastLeftOccurrence) {
+      // If the sum is zero, add the triplet to the result
+      if (sum === 0) {
+        result.push([nums[i], nums[left], nums[right]])
+
+        // Skip duplicates
+        while (left < right && nums[left] === nums[left + 1]) {
+          left++
+        }
+        while (left < right && nums[right] === nums[right - 1]) {
+          right--
+        }
+
+        // Move the pointers towards each other
         left++
-      }
-
-      // Move the right pointer to the next distinct element
-      while (left < right && nums[right] === lastRightOccurrence) {
         right--
       }
-    }
-    if (sum > 0) {
-      // If the sum is greater than zero, move the right pointer to the left
-      right--
-    } else {
-      // If the sum is less than or equal to zero, move the left pointer to the right
-      left++
+      // If the sum is greater than zero, move the right pointer towards the left
+      else if (sum > 0) {
+        right--
+      }
+      // If the sum is less than zero, move the left pointer towards the right
+      else {
+        left++
+      }
     }
   }
+
+  // Return the result array
   return result
 }
 
